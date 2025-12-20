@@ -18,7 +18,7 @@ Using [vim-plug](https://github.com/junegunn/vim-plug):
 
 ```vim
 Plug 'tpope/vim-fugitive'
-Plug 'junegunn/gv.vim'
+Plug 'mao-yining/gv.vim'
 ```
 
 Usage
