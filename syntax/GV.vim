@@ -9,7 +9,8 @@ syn match gvSha     /[a-f0-9]\{6,}/ contained
 syn match gvMessage /.* \ze(.\{-})$/ contained contains=gvTag,gvGitHub,gvJira nextgroup=gvAuthor
 syn match gvAuthor  /.*$/ contained
 syn match gvMeta    /([^)]\+) / contained contains=gvTag nextgroup=gvMessage
-syn match gvTag     /(tag:[^)]\+)/ contained
+syn match gvTag     /\((\|, \)\@<=tag: .\{-1,}\(, \|)\)\@=/ contained
+syn match gvTag     /(tag: [^ )]\+)/ contained
 syn match gvGitHub  /\<#[0-9]\+\>/ contained
 syn match gvJira    /\<[A-Z]\+-[0-9]\+\>/ contained
 hi def link gvDate   Number
