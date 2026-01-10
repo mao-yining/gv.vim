@@ -2,7 +2,7 @@ vim9script
 # The MIT License (MIT)
 #
 # Copyright (c) 2016 Junegunn Choi
-# Copyright (c) 2025 Mao-Yining
+# Copyright (c) 2025-2026 Mao-Yining
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -51,8 +51,7 @@ def TabNew()
 	execute $":{tabpagenr() - 1} .. tabnew"
 enddef
 
-def GBrowse()
-	const sha = GvSha()
+def GBrowse(sha: string)
 	if empty(sha)
 		EchoShrug()
 		return
@@ -144,7 +143,7 @@ def Maps()
 	nnoremap <buffer><nowait> q  <Cmd>$wincmd w <Bar> close<CR>
 	nnoremap <buffer><nowait> ZZ <Cmd>$wincmd w <Bar> close<CR>
 	nnoremap <buffer><nowait> gq <Cmd>$wincmd w <Bar> close<CR>
-	nnoremap <buffer><nowait> gb <ScriptCmd>GBrowse()<CR>
+	nnoremap <buffer><nowait> gb <ScriptCmd>GBrowse(GvSha())<CR>
 	nnoremap <buffer><nowait> o  <ScriptCmd>Open(false)<CR>
 	xnoremap <buffer><nowait> o  <ScriptCmd>Open(true)<CR>
 	nnoremap <buffer><nowait> O  <ScriptCmd>Open(false, true)<CR>
@@ -191,7 +190,7 @@ enddef
 def Fill(cmd: string)
 	setlocal modifiable
 	:%delete _
-	setline(1, systemlist(cmd))
+	systemlist(cmd)->setline(1)
 	setlocal nomodifiable
 enddef
 
