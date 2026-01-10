@@ -34,8 +34,8 @@ def EchoShrug()
 	EchoWarn('¯\_(ツ)_/¯')
 enddef
 
-def GvSha(...args: list<any>): string
-	return matchstr(get(args, 0, getline('.')), begin .. '\zs[a-f0-9]\+')
+def GvSha(...args: list<string>): string
+	return args->get(0, getline('.'))->matchstr(begin .. '\zs[a-f0-9]\+')
 enddef
 
 def Move(flag: string): string
@@ -59,14 +59,14 @@ def GBrowse(sha: string)
 	execute 'GBrowse' sha
 enddef
 
-def Type(visual: bool): list<any>
+def Type(visual: bool): tuple<any, any>
 	if visual
-		const shas = getline(min((line("."), line("v"))), max((line("."), line("v"))))
+		const shas = min((line("."), line("v")))->getline(max((line("."), line("v"))))
 			->map((_, val) => GvSha(val))->filter((_, val) => !empty(val))
 		if len(shas) < 2
-			return [0, 0]
+			return (0, 0)
 		endif
-		return ['diff', g:FugitiveShellCommand(['diff', shas[-1], shas[0]])]
+		return ('diff', g:FugitiveShellCommand(['diff', shas[-1], shas[0]]))
 	endif
 
 	def HasGitOrigin(): bool
@@ -78,14 +78,14 @@ def Type(visual: bool): list<any>
 
 	const syn = synID(line('.'), col('.'), false)->synIDattr('name')
 	if syn == 'gvGitHub' && HasGitOrigin()
-		return ['link', '/issues/' .. expand('<cword>')[1 : ]]
+		return ('link', '/issues/' .. expand('<cword>')[1 : ])
 	elseif syn == 'gvTag' && HasGitOrigin()
-		return ['link', '/releases/' .. getline('.')
-			->matchstr('(tag: \zs[^ ,)]\+')]
+		return ('link', '/releases/' .. getline('.')
+			->matchstr('(tag: \zs[^ ,)]\+'))
 	endif
 
 	const sha = GvSha()
-	return empty(sha) ? [0, 0] : ['commit', g:FugitiveFind(sha)]
+	return empty(sha) ? (0, 0) : ('commit', g:FugitiveFind(sha))
 enddef
 
 def Split(tab: bool)
@@ -119,7 +119,7 @@ def Open(visual: bool, tab = false)
 	Split(tab)
 	Scratch()
 	if type == 'commit'
-		execute 'e' escape(target, ' ')
+		execute 'e' target->escape(' ')
 		nnoremap <buffer> gb <Cmd>GBrowse<CR>
 	elseif type == 'diff'
 		Fill(target)
@@ -171,7 +171,7 @@ def DiffView(sha: string)
 	elseif len(files) == 1
 		DiffFile(sha, files[0])
 	else
-		popup_menu(files, {
+		files->popup_menu({
 			pos: "center",
 			title: "Select file to view diff - " .. sha[0 : 7],
 			borderchars: get(g:, "popup_borderchars",
@@ -288,14 +288,14 @@ def List(log_opts: list<string>)
 enddef
 
 def Trim(arg: string): string
-	const trimmed = arg->substitute('\s*$', '', '')
+	const trimmed = arg->trim()
 	return trimmed =~ "^'.*'$" ? trimmed[1 : -2]->substitute("''", '', 'g')
 		: trimmed =~ '^".*"$' ? trimmed[1 : -2]->substitute('""', '', 'g')->substitute('\\"', '"', 'g')
 		: trimmed->substitute('""\|''''', '', 'g')->substitute('\\ ', ' ', 'g')
 enddef
 
 def GvShellwords(arg: string): list<string>
-	var words: list<string> = []
+	var words: list<string>
 	var contd = false
 	for token in arg->split('\%(\%(''\%([^'']\|''''\)\+''\)\|\%("\%(\\"\|[^"]\)\+"\)\|\%(\%(\\ \|\S\)\+\)\)\s*\zs')
 		const trimmed = Trim(token)
@@ -309,7 +309,7 @@ def GvShellwords(arg: string): list<string>
 	return words
 enddef
 
-def SplitPathspec(args: list<string>): tuple<list<string>, list<any>>
+def SplitPathspec(args: list<string>): tuple<list<string>, list<string>>
 	const split = args->index('--')
 	if split < 0
 		return (args, [])
@@ -366,7 +366,7 @@ export def GV(bang: bool, visual: bool, line1: number, line2: number, args: stri
 	const root = g:FugitiveFind(':/')
 	try
 		if cwd !=# root
-			execute cd escape(root, ' ')
+			execute cd root->escape(' ')
 		endif
 		if args =~ '?$'
 			if len(args) > 1
@@ -387,7 +387,7 @@ export def GV(bang: bool, visual: bool, line1: number, line2: number, args: stri
 		EchoWarn(v:exception)
 	finally
 		if getcwd() !=# cwd
-			execute cd escape(cwd, ' ')
+			execute cd cwd->escape(' ')
 		endif
 	endtry
 enddef
