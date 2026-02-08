@@ -325,7 +325,10 @@ def Gl(buf: number, visual: bool)
 	endif
 	tab split
 	silent execute visual ? "'<,'>Gllog" : ':0Gllog'
-	getloclist(0)->insert({bufnr: buf}, 0)->setloclist(0)
+	const win = winnr()
+	getloclist(win)->insert({bufnr: buf, text: bufname(buf)})->setloclist(win, 'r')
+	setloclist(win, [], 'a', {title: mapping_helps})
+
 	noautocmd b %%
 
 	lopen
@@ -337,7 +340,6 @@ def Gl(buf: number, visual: bool)
 	"Conceal"->matchadd('^fugitive://.\{-}\.git//')
 	"Conceal"->matchadd('^fugitive://.\{-}\.git//\x\{7}\zs.\{-}||')
 	setlocal concealcursor=nv conceallevel=3 nowrap
-	w:quickfix_title = mapping_helps
 enddef
 
 def Gld(start: number, end: number)
