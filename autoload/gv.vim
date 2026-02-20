@@ -234,7 +234,7 @@ def SetGitOrigin()
 enddef
 
 def Scratch()
-	setlocal buftype=nofile bufhidden=wipe noswapfile nomodeline
+	setlocal buftype=nofile bufhidden=wipe noswapfile nomodeline nobuflisted
 enddef
 
 def Fill(cmd: string)
