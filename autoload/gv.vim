@@ -48,7 +48,7 @@ def Browse(url: string)
 enddef
 
 def TabNew()
-	execute $":{tabpagenr() - 1} .. tabnew"
+	execute $":{tabpagenr() - 1}tabnew"
 enddef
 
 def GBrowse(sha: string)
@@ -189,9 +189,9 @@ def DiffView(sha: string)
 enddef
 
 def Maps()
-	nnoremap <buffer><nowait> q  <Cmd>$wincmd w <Bar> close<CR>
-	nnoremap <buffer><nowait> ZZ <Cmd>$wincmd w <Bar> close<CR>
-	nnoremap <buffer><nowait> gq <Cmd>$wincmd w <Bar> close<CR>
+	nnoremap <buffer><nowait> q  <Cmd>$wincmd w<Bar>close<CR>
+	nnoremap <buffer><nowait> ZZ <Cmd>$wincmd w<Bar>close<CR>
+	nnoremap <buffer><nowait> gq <Cmd>$wincmd w<Bar>close<CR>
 	nnoremap <buffer><nowait> gb <ScriptCmd>GBrowse(GvSha())<CR>
 	nnoremap <buffer><nowait> o  <ScriptCmd>Open(false)<CR>
 	xnoremap <buffer><nowait> o  <ScriptCmd>Open(true)<CR>
