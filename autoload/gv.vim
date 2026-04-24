@@ -119,11 +119,11 @@ def Open(visual: bool, tab = false)
 	Split(tab)
 	Scratch()
 	if type == 'commit'
-		execute 'e' target->escape(' ')
+		edit `=target->escape(' ')`
 		nnoremap <buffer> gb <Cmd>GBrowse<CR>
 	elseif type == 'diff'
 		Fill(target)
-		setf diff
+		setfiletype diff
 	endif
 	nnoremap <buffer> q <Cmd>close<CR>
 	const bang = tab ? '!' : ''
@@ -131,7 +131,6 @@ def Open(visual: bool, tab = false)
 		execute 'doautocmd <nomodeline> User GV' .. bang
 	endif
 	wincmd p
-	echo
 enddef
 
 def Dot(): string
@@ -239,7 +238,6 @@ enddef
 
 def Fill(cmd: string)
 	setlocal modifiable
-	:%delete _
 	systemlist(cmd)->setline(1)
 	setlocal nomodifiable
 enddef
@@ -324,12 +322,12 @@ def Gl(buf: number, visual: bool)
 		return
 	endif
 	tab split
-	silent execute visual ? "'<,'>Gllog" : ':0Gllog'
+	silent execute visual ? ":'<,'>Gllog" : ':0Gllog'
 	const win = winnr()
 	getloclist(win)->insert({bufnr: buf, text: bufname(buf)})->setloclist(win, 'r')
 	setloclist(win, [], 'a', {title: mapping_helps})
 
-	noautocmd b %%
+	noautocmd buffer %%
 
 	lopen
 	xnoremap <buffer> o <ScriptCmd>Gld(line("v"), line("."))<CR>
@@ -345,9 +343,9 @@ enddef
 def Gld(start: number, end: number)
 	const to   = (start, end)->min()->getline()->split("|")[0]
 	const from = (start, end)->max()->getline()->split("|")[0]
-	execute $":{tabpagenr() - 1}tabedit" escape(to, ' ')
+	execute $":{tabpagenr() - 1}tabedit" to->escape(' ')
 	if from !=# to
-		execute 'vsplit' escape(from, ' ')
+		vsplit `=from->escape(' ')`
 		windo diffthis
 	endif
 enddef
