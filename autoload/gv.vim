@@ -143,16 +143,14 @@ def DiffFile(sha: string, file: string)
 	Scratch()
 	const current_cmd = g:FugitiveShellCommand(['show', $'{sha}:{file}'])
 	systemlist(current_cmd)->setline(1)
-	setl nomodifiable
 
 	execute($"rightbelow vsplit [Diff] {sha}~1 - {file}")
 	Scratch()
 	const parent_cmd = g:FugitiveShellCommand(['show', $'{sha}~1:{file}'])
 	systemlist(parent_cmd)->setline(1)
-	setl nomodifiable
 
 	windo diffthis
-	windo setlocal winfixwidth
+	windo setlocal winfixwidth nomodifiable
 	windo nnoremap <buffer> q <Cmd>tabclose<CR>
 
 	wincmd p
