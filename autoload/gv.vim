@@ -141,13 +141,15 @@ enddef
 def DiffFile(sha: string, file: string)
 	execute($":{tabpagenr() - 1} tabnew file [Diff] {sha} - {file}")
 	Scratch()
-	const current_cmd = g:FugitiveShellCommand(['show', sha .. ':' .. file])
+	const current_cmd = g:FugitiveShellCommand(['show', $'{sha}:{file}'])
 	systemlist(current_cmd)->setline(1)
+	setl nomodifiable
 
 	execute($"rightbelow vsplit [Diff] {sha}~1 - {file}")
 	Scratch()
-	const parent_cmd = g:FugitiveShellCommand(['show', sha .. '~1:' .. file])
+	const parent_cmd = g:FugitiveShellCommand(['show', $'{sha}~1:{file}'])
 	systemlist(parent_cmd)->setline(1)
+	setl nomodifiable
 
 	windo diffthis
 	windo setlocal winfixwidth
