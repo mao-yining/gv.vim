@@ -177,8 +177,6 @@ def DiffView(sha: string)
 			title: "Select file to view diff - " .. sha[0 : 7],
 			borderchars: get(g:, "popup_borderchars",
 				['─', '│', '─', '│', '┌', '┐', '┘', '└']),
-			borderhighlight: get(g:, "popup_borderhighlight", ['Normal']),
-			highlight: get(g:, "popup_highlight", 'Normal'),
 			callback: (id, result) => {
 				if result > 0
 					const selected_file = files[result - 1]
