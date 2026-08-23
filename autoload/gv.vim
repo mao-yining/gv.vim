@@ -22,7 +22,16 @@ vim9script
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-const mapping_helps = "o: open split / O: open tab / gb: GBrowse / q: quit / dd: diff view"
+const mapping_helplist =<< trim END
+o: open split
+O: open tab
+gb: GBrowse
+q: quit
+dd: diff view
+J: open Next
+K: open Previous
+END
+const mapping_helps = mapping_helplist->join(' / ')
 
 const begin = '^[^0-9]*[0-9]\{4}-[0-9]\{2}-[0-9]\{2}\s\+'
 
@@ -194,9 +203,11 @@ def Maps()
 	xnoremap <buffer><nowait> o  <ScriptCmd>Open(true)<CR>
 	nnoremap <buffer><nowait> O  <ScriptCmd>Open(false, true)<CR>
 	xnoremap <buffer><nowait> O  <ScriptCmd>Open(true, true)<CR>
-	nnoremap <buffer><nowait> dd <ScriptCmd>DiffView(GvSha())<CR>
 	nnoremap <buffer><nowait> <CR> <ScriptCmd>Open(false)<CR>
 	xnoremap <buffer><nowait> <CR> <ScriptCmd>Open(true)<CR>
+	nnoremap <buffer><nowait> dd <ScriptCmd>DiffView(GvSha())<CR>
+	nnoremap <buffer><nowait> J  j<ScriptCmd>Open(false)<CR>
+	nnoremap <buffer><nowait> K  k<ScriptCmd>Open(false)<CR>
 	nnoremap <buffer><nowait><expr> .  Dot()
 	nnoremap <buffer><nowait><expr> ]] Move('')
 	nnoremap <buffer><nowait><expr> ][ Move('')

@@ -37,6 +37,7 @@ selected lines.
 ### Mappings
 
 - `o` or `<cr>` on a commit to display the content of it
+- `J` or `K` to display the next/previous commit content
 - `o` or `<cr>` on commits to display the diff in the range
 - `O` opens a new tab instead
 - `dd` select a file of a commit to diff in a new tab
